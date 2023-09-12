@@ -1,0 +1,40 @@
+# Seeding:
+
+-> Add new:
+Select Land
+Select crop
+Select crop type
+Select crop variant
+Select Farmer
+Input Land usage (in %)
+Input no of plots (default : 1)
+
+-> Edit is same as Add new
+-> Default can be a table or list of all created seeding with filter
+
+# Harvesting:
+
+-> Add new:
+
+A Table showing all Land crops available for harvesting (all seeding list)
+
+User Can Search by:
+Select Land
+Select crop (only filter)
+Select crop type
+Select crop variant
+
+Upon selecting a particular seeding from list:
+
+
+  harvested quantity (in Kg): 
+  Input crop_status: Make it dropdown or textField with suggestions like : ripe/unripe something like that
+  Input total_labor_hour: 0 (optional field)
+  status:dropdown (fully harvested/partially harvested)
+  
+[if fully harvested then corresponding
+% of land will be free for creating new seeding]
+
+-> Edit is same as Add new
+
+-> Default can be a table or list of all created harvest with filter

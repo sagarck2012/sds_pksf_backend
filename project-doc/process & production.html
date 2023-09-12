@@ -1,0 +1,319 @@
+<html>
+<head>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<title>Logic</title>
+<body>
+<h1>Production</h1>
+
+<table style="width:75%">
+    <tr>
+        <th>Serial</th>
+        <th>Heading</th>
+        <th>Detail</th>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>Production house</td>
+        <td>Pre-registered</td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>User</td>
+        <td>Pre-registered under a production house
+            (everything done by user is under production house)
+        </td>
+    </tr>
+    <tr>
+        <td>3</td>
+        <td>Farmer</td>
+        <td>Registered by user</td>
+    </tr>
+    <tr>
+        <td>4</td>
+        <td>Land Owner</td>
+        <td>Registered by user</td>
+    </tr>
+    <tr>
+        <td>5</td>
+        <td>Land </td>
+        <td>physical entity (Registered farmer, owner, production house required) <br>
+            status: ready, occupied, damaged; by default Land is free upon creation
+            [ User can update land_status manually to  only one status : damaged ].
+            Update land status based on seeding status for a particular land.
+
+        </td>
+
+    </tr>
+    <tr>
+        <td>6</td>
+        <td>Seeding</td>
+        <td>Seeding is start of cultivation when a seeding is created it means land is ready for  plotting.
+            User need to select: land, farmer;   input: no_of_plots (this is maximum number of plots allowed to create
+            for the seeding),sensor data<br>
+            There can be <b>only one active seeding for a land</b><br>
+            Use master-child relation with seeding and plot. seeding is summary and
+            plot is kind of detail table.<br>
+            Possible status :ready, occupied, damaged<br>
+            No user input for seeding status change; status of seeding will change based on
+            plot status under seeding.
+        </td>
+    </tr>
+    <tr>
+        <td>7</td>
+        <td>Plot</td>
+        <td>Plots are rows in a land for a particular seeding (i.e crop type). <br>
+            Under a seeding there can be active plots equal or less than no_of_plots in seeding table<br>
+            Take input from user: seeding, crop, crop type, crop variant, % of land usage (maximum
+            can be 100 summing all active plots %)
+            <br>
+            <br><b>While creating plot keep a dropdown usable or damaged</b>
+            <br>
+            Optional input: costing, seed_procurement, expected_harvesting_time, total_labor_hour,
+            fertilizers
+            <br>
+            Possible status: ready, partially harvested, fully harvested, damaged.
+            <br>Status change while harvesting status is changed.
+            <br><b>About Crop, Crop type and Crop Variant: We'll have multiple table on
+                Crop Variant Level. Name these tables as "farm_CropName". e.g. for vegetable name it
+                as farm_vegetable. In case of sql query from crop_id find the CropName from Crop Table; thus u know you
+                have to query on "farm_CropName" table. Then search the variant on the
+                corresponding table</b>
+
+        </td>
+    <tr>
+        <td>8</td>
+        <td>Harvesting</td>
+        <td>Harvesting will be based on plot with virtually infinite harvest cycle.
+            <br>User need to select Land, Seeding, plot & input harvested quantity in kg, sensor_data harvesting
+            <br>User also need to select harvesting status manually : "fully harvested" or
+            "partially harvested" for a particular plot.
+            <br>
+            When "fully harvested" is selected against a particular plot then
+            corresponding plot status will be fully harvested. Keep <b>harvest_id</b> in plot table.
+            <br> Make % of land free for new plot based on plot  % occupied whenever a plot is
+            fully harvested.
+            <br>
+            If no active plots under a seeding then
+            make that seeding status closed. Otherwise seeding status can be ready, occupied, closed, damaged.
+
+            <br><b>tracking column: seeding_id, processing_id</b>
+
+        </td>
+
+    </tr>
+<tr>
+    <td>9</td>
+    <td>
+        Key points
+    </td>
+    <td>
+        <ul>
+            <li>Maximum cumulative "active_land_usage" by plots is 100% for a particular seeding</li>
+            <li>Maximum allowed no of plot under a seeding is equal to maximum_no_of_plots column of
+            seeding table
+            </li>
+            <li>Harvest based on plot</li>
+            <li>When "fully harvested" plot status will be fully harvested</li>
+            <li>Make % of land free for new plot based on
+                plot "land_usage" column. <b>Keep harvest_id in plot table.</b>
+            </li>
+            <li>When active plot under a seeding is equal to zero then new seeding can be created
+                for that particular land. There can be only one active seeding under a land
+            </li>
+
+            <li>
+                Land Status: ready, occupied, damaged<br>
+                Seeding Status: ready, occupied, closed, damaged<br>
+                Plot Status: ready, partially harvested, fully harvested, damaged<br>
+                Harvest Status: partially harvested, fully harvested, packaged<br>
+                Sticker Status: generated, printed, crated, shipped, received, deactivated (due to packaging edit)<br>
+                Shipping Status: ready, shipped, received<br>
+            </li>
+        </ul>
+    </td>
+</tr>
+
+
+</table>
+<br><br>
+<h1>Processing</h1>
+<table style="width:75%">
+    <tr>
+        <th>Serial</th>
+        <th>Heading</th>
+        <th>Detail</th>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>Packaging</td>
+        <td>Select available harvest quantity (based on harvest status: partially harvested or fully harvested only) for packaging filtered by
+            crop type & date range. Keep no of sticker in packaging table <br>
+            <b>Generate a processing_id </b> to track it (use same logic as barcode).
+            <br>Keep this processing_id in harvesting table
+            i.e. all harvest table rows.
+            <br>Update status to packaged for all harvesting table rows
+            <br>By default sticker row status will be "generated"
+        </td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>Packaging Detail</td>
+        <td>Sticker table.
+            <b>Tracking column: processing_id, sticker_id, crate_id, shipping_id</b> in this table with status<br>
+            <br>Available status: generated; printed, damaged, crated, shipped, received
+        </td>
+    </tr>
+    <tr>
+        <td>3</td>
+        <td>Crating</td>
+        <td><b>ONE</b> Super master table: keep reg. info of crate with status
+            <br>status: free, loaded, shipped
+            <br>Apart from status update we've nothing to do with it
+            <br><b>Another One</b> is process_crate_master.
+            <br>Here we'll keep all total things like total no of packages added
+            <br><b>Tracking column: shipping_id</b>
+        </td>
+    </tr>
+    <tr>
+        <td>4</td>
+        <td>Crating detail</td>
+        <td>Keep process_crate_id and packaging_detail_id, package_id in rows
+            <br>Update packaging_detail_id status to loaded & packaging_id to loaded also</td>
+
+    </tr>
+
+    <tr>
+        <td>5</td>
+        <td>Shipping</td>
+        <td>Master Table
+            <br>Keep basic info like shipping address, total no of crate, product etc.
+        </td>
+
+    </tr>
+    <tr>
+        <td>6</td>
+        <td>Shipping Detail</td>
+        <td>Shipping Child Table
+            <br><b>Tracking column: shipping_id, process_crate_master_id, process_crating_detail_id</b>
+        </td>
+
+    </tr>
+    <tr>
+        <td>7</td>
+        <td>Receiving Hub</td>
+        <td>Receiving Hub Master
+            <br>Keep summary like total no of crate received etc
+            <br><b>Tracking column: shipping_id, process_crate_id</b>
+        </td>
+
+    </tr>
+
+    <tr>
+        <td>8</td>
+        <td>Receiving Hub</td>
+        <td>Receiving Hub Child
+            <br><b>Tracking column: shipping_id, process_crate_id, receive_master_id</b>
+        </td>
+
+    </tr>
+
+    <tr>
+        <td>9</td>
+        <td>Back Track
+            <br>When crate_bar_code scanned @ hub</td>
+        <td>
+            <br><b>Query cratemanagement_crateinfo with this bar code to get pk</b>
+            <br><b>Search this crate_id with status == "shipped" in process_crating_master table</b>
+        </td>
+
+    </tr>
+
+    <tr>
+        <td>10</td>
+        <td>QR Code</td>
+        <td>url/harvest_id/</td>
+    </tr>
+    <tr>
+        <td>11</td>
+        <td>Bar Code Logic</td>
+        <td>ddmmyy + 6 random digit</td>
+    </tr>
+
+
+
+
+</table>
+
+
+<br><br>
+<h1>User Privilege</h1>
+<table style="width:75%">
+    <tr>
+        <th>Serial</th>
+        <th>Heading</th>
+        <th>Detail</th>
+    </tr>
+
+    <tr>
+        <td>1</td>
+        <td>DB Tables</td>
+        <td>Menu Name<br>
+            Module Name (foreign key: menu name)<br>
+            Module Action (foreign key: menu name, module name)<br>
+            Privilege (foreign key: menu name, module name, module action, user, role)
+        </td>
+
+
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>UI</td>
+        <td>Only one page containing menu name, module name, module action per role to check or uncheck any menu or
+            module or module action
+        </td>
+
+
+    </tr>
+    <b>
+    <tr>
+        <td>3</td>
+        <td>Logic</td>
+
+        <td>Populate DB with Menu Names<br>
+            Populate DB with Module Names<br>
+            Populate DB with Module Action<br>
+            Populate DB with Privilege (make is_allowed = 1 by default)<br>
+            Write a function/decorator which will check if requested user's role (get user role from user_id)
+            "is_allowed" to access the api resources
+        </td>
+    </tr>
+     <tr>
+        <td>4</td>
+        <td>API</td>
+        <td>
+
+            (I) user/role_list/ : GET request, Response: all available roles<br>
+            (II) user/role_privilege/: GET request {role_id in JSON body}<br>
+            Response menu, module, module action with "is_allowed" value for that specific role<br>
+            (III) user/role_privilege_update/ POST request {role_id, menu, module, module action with "is_allowed" value
+            in JSON body}<br>
+            Response: Update "privilege" Table for that row accordingly
+
+        </td>
+
+
+    </tr>
+    </b>
+
+</table>
+
+
+
+</body>
+
+</html>

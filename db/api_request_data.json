@@ -1,0 +1,61 @@
+//user register
+{
+ "email":"saklayan@gmail.com",
+ "password":"123456",
+ "role": 1,
+ "production_house": 1,
+ "name": "saklayan",
+ "nid": "1235650",
+ "phone_number": "0171234891",
+ "address": "dhaka"
+}
+
+//user login
+{
+ "email":"saklayan@gmail.com",
+ "password":"123456"
+}
+
+//CropType Add
+{
+     "local_name": "Jhinga",
+     "eng_name": "Luffa",
+     "scientific_name": "Luffa acutangula",
+     "major_nutrient": "Protein, Bita-Carotine, Vitamin C,Calcium, Phosphorus",
+     "crop_id": 5
+}
+
+{
+    "local_name": "Begun",
+    "eng_name": "Eggplant",
+    "scientific_name": "Solanum melongena",
+    "major_nutrient": "Vitamin A, C, E, K, Calcium, Magnesium, Zinc ",
+	"crop_category_id": 5
+}
+
+//Vegetable Variant Add
+{
+	"crop_type_id": 1,
+	"name": "signath",
+    "soil_type": "etel",
+    "harvesting_period":"June-July",
+    "expected_production": "20 Ton/Hectre",
+    "seasonal": 1
+}
+
+
+// shipping info register
+
+{
+	"user_id": 1,
+	"destination" : "pksf dhaka",
+	"destination_contact": "53345",
+	"origin" : "kachikata",
+	"origin_contact": "67335",
+	"shipping_agent": "sundarban",
+	"shipping_contact": "234234",
+	"expected_shipping_date": "2021-01-30 16:00",
+	"expected_arrival_date": "2021-02-15 09:00"
+}
+
+
